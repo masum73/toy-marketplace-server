@@ -28,79 +28,66 @@ async function run() {
     await client.connect();
 
     const toyCollection = client.db('toyTime').collection('toys');
-    
+
 
     // all toys get in home
-    app.get('/alltoys', async (req,res) => {
-        const cursor = toyCollection.find();
-        const result = await cursor.toArray();
-        //console.log(result);
-        res.send(result)
-    })
-    // single toy view details - home 
-    app.get('/alltoys/:id', async (req,res) => {
-        const cursor = toyCollection.find();
-        const result = await cursor.toArray();
-        //console.log(result);
-        res.send(result)
-    })
-
-    // as a user posting a single toy 
-    app.post('/alltoys', async (req,res) => {
-        const toy = req.body;
-        console.log(toy);
-
-        const result = await toyCollection.insertOne(toy);
-        res.send(result);
-    })
-
-    // as a user updating a single toy 
-    app.patch('/alltoys/:id', async (req,res) => {
+    app.get('/alltoys', async (req, res) => {
       const cursor = toyCollection.find();
       const result = await cursor.toArray();
       //console.log(result);
       res.send(result)
-  })
+    })
 
-  // as a user deleting a single toy 
-    app.delete('/mytoys/:id', async (req,res) => {
+    // as a user posting a single toy - add a toy 
+    app.post('/alltoys', async (req, res) => {
+      const toy = req.body;
+      console.log(toy);
+
+      const result = await toyCollection.insertOne(toy);
+      res.send(result);
+    })
+
+
+    // my toys - deleting a single toy 
+    app.delete('/mytoys/:id', async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)};
+      const query = { _id: new ObjectId(id) };
       const result = await toyCollection.deleteOne(query)
       res.send(result);
-  })
+    })
 
-  // my toys - email query 
-  app.get('/mytoys', async (req,res) => {
-    let query = {};
-    if(req.query?.email){
-      query = {'seller.email': req.query.email}
-    }
-    console.log(query);
-    const result = await toyCollection.find(query).toArray();
-    res.send(result)
-})
+    // my toys - email query - all toys get
+    app.get('/mytoys', async (req, res) => {
+      let query = {};
+      if (req.query?.email) {
+        query = { 'seller.email': req.query.email }
+      }
+      console.log(query);
+      const result = await toyCollection.find(query).toArray();
+      res.send(result)
+    })
 
-app.get('/mytoys/toy/:id', async (req,res) => {
-   const id = req.params.id;
-   const query = {_id: new ObjectId(id)}
+    // my toys - single toy details - get
+    app.get('/mytoys/toy/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
 
-   const result = await toyCollection.findOne(query);
-   res.send(result)
-}) 
+      const result = await toyCollection.findOne(query);
+      res.send(result)
+    })
+    // my toys - single toy details - update
+    app.patch('/mytoys/toy/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) }
+      const updateToy = req.body;
 
-app.patch('/mytoys/toy/:id', async (req,res) => {
-  const id = req.params.id;
-  const filter = {_id: new ObjectId(id)}
-  const updateToy = req.body;
-  
-  const result = await toyCollection.updateOne(filter, {$set:updateToy})
-  res.send(result)
-})
+      const result = await toyCollection.updateOne(filter, { $set: updateToy })
+      res.send(result)
+    })
 
 
 
-    
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -113,9 +100,9 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('toy is selling')
-  })
-  
-  app.listen(port, () => {
-    console.log(`Toy Time Server is running on port ${port}`)
-  })
+  res.send('toy is selling')
+})
+
+app.listen(port, () => {
+  console.log(`Toy Time Server is running on port ${port}`)
+})
