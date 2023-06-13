@@ -32,6 +32,19 @@ async function run() {
 
     // all toys get in home
     app.get('/alltoys', async (req, res) => {
+      const query = req.query.q
+      console.log(query);
+      if(query){
+        const cursor = toyCollection.find({name: new RegExp(`${query}`)})
+        const result = await cursor.toArray();
+         return res.send(result)
+      }
+      const limit = req.query.limit;
+      if(limit){
+        const cursor = toyCollection.find().limit(20);
+        const result = await cursor.toArray();
+        return res.send(result)
+      }
       const cursor = toyCollection.find();
       const result = await cursor.toArray();
       //console.log(result);
