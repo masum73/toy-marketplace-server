@@ -75,9 +75,14 @@ async function run() {
       if (req.query?.email) {
         query = { 'seller.email': req.query.email }
       }
-      console.log(query);
-      const result = await toyCollection.find(query).toArray();
-      res.send(result)
+
+      // console.log(query);
+      const result = toyCollection.find(query);
+      // res.send(result)
+      if(req.query?.sort){
+        result.sort({price: req.query.sort})
+      }
+      res.send(await result.toArray())
     })
 
     // my toys - single toy details - get
