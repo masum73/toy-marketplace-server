@@ -7,7 +7,7 @@
 * In blog, people can read the blogs
 
 ## Project live Link
-https://toy-time.firebaseapp.com/
+https://toy-time.web.app/
 
 ## Project Back-end Link
-https://toy-time-server-mcw3s2dri-masum73.vercel.app/
+https://toy-time-server-masum73.vercel.app/
